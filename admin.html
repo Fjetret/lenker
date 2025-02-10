@@ -31,11 +31,9 @@
             </div>
 
             <div class="form-group">
-                <label>Featured Image</label>
-                <div class="image-upload-container">
-                    <input type="file" id="featuredImage" accept="image/*" class="file-input">
-                    <div id="featuredImagePreview" class="image-preview"></div>
-                </div>
+                <label>Featured Image URL</label>
+                <input type="url" id="featuredImage" placeholder="Paste image URL here" class="form-control">
+                <div id="featuredImagePreview" class="image-preview"></div>
             </div>
 
             <div class="form-group">
@@ -65,7 +63,7 @@
             <div class="form-group">
                 <label>Tags</label>
                 <div class="tags-input">
-                    <input type="text" id="tagInput" placeholder="Add tags...">
+                    <input type="text" id="tagInput" placeholder="Add tags and press Enter">
                     <div id="tagsContainer" class="tags-container"></div>
                 </div>
             </div>
@@ -96,7 +94,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAtrLJJq9Ifhu2XHtC5QUryaw1cpvQ71z0",
@@ -112,7 +109,6 @@
         const app = initializeApp(firebaseConfig);
         window.auth = getAuth(app);
         window.db = getFirestore(app);
-        window.storage = getStorage(app);
         
         // Make Firebase functions available globally
         window.signInWithEmailAndPassword = signInWithEmailAndPassword;
@@ -123,9 +119,6 @@
         window.doc = doc;
         window.query = query;
         window.orderBy = orderBy;
-        window.storageRef = ref;
-        window.uploadBytes = uploadBytes;
-        window.getDownloadURL = getDownloadURL;
     </script>
 
     <script>
@@ -134,18 +127,7 @@
             selector: '.tinymce',
             plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect typography inlinecss',
             toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-            height: 500,
-            images_upload_handler: async function (blobInfo, success, failure) {
-                try {
-                    const file = blobInfo.blob();
-                    const storageRef = ref(storage, 'images/' + file.name);
-                    const snapshot = await uploadBytes(storageRef, file);
-                    const downloadURL = await getDownloadURL(snapshot.ref);
-                    success(downloadURL);
-                } catch (error) {
-                    failure('Image upload failed: ' + error.message);
-                }
-            }
+            height: 500
         });
     </script>
     <script src="app.js"></script>
