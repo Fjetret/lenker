@@ -1,43 +1,91 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Links - Admin Panel</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="loginSection">
-        <h2>Login to Links Admin</h2>
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="login()">Login</button>
-    </div>
+// Login
+async function login() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-    <div id="adminSection" style="display: none;">
-        <h2>New Article</h2>
-        <input type="text" id="title" placeholder="Title">
-        <textarea id="content" placeholder="Content"></textarea>
-        <input type="text" id="productLink" placeholder="Product Link">
-        <input type="text" id="imageUrl" placeholder="Image URL">
-        <button onclick="saveArticle()">Save Article</button>
+    try {
+        await auth.signInWithEmailAndPassword(email, password);
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('adminSection').style.display = 'block';
+        loadArticles();
+    } catch (error) {
+        alert('Login error: ' + error.message);
+    }
+}
 
-        <h2>All Articles</h2>
-        <div id="articlesList"></div>
-    </div>
+// Save article
+async function saveArticle() {
+    const title = document.getElementById('title').value;
+    const content = document.getElementById('content').value;
+    const productLink = document.getElementById('productLink').value;
+    const imageUrl = document.getElementById('imageUrl').value;
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    
-    <script>
-    const firebaseConfig = {
-        // Your Firebase configuration will go here
-    };
+    try {
+        await db.collection('articles').add({
+            title,
+            content,
+            productLink,
+            imageUrl,
+            createdAt: new Date()
+        });
+        
+        alert('Article saved successfully!');
+        loadArticles();
+        // Clear form
+        document.getElementById('title').value = '';
+        document.getElementById('content').value = '';
+        document.getElementById('productLink').value = '';
+        document.getElementById('imageUrl').value = '';
+    } catch (error) {
+        alert('Error saving article: ' + error.message);
+    }
+}
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    </script>
-    <script src="app.js"></script>
-</body>
-</html>
+// Load articles
+async function loadArticles() {
+    const articlesList = document.getElementById('articlesList');
+    articlesList.innerHTML = '';
+
+    try {
+        const snapshot = await db.collection('articles').orderBy('createdAt', 'desc').get();
+        snapshot.forEach(doc => {
+            const article = doc.data();
+            articlesList.innerHTML += `
+                <div class="article">
+                    <h3>${article.title}</h3>
+                    <p>${article.content}</p>
+                    <a href="${article.productLink}">Product Link</a>
+                    <img src="${article.imageUrl}" alt="${article.title}">
+                    <button onclick="deleteArticle('${doc.id}')">Delete</button>
+                </div>
+            `;
+        });
+    } catch (error) {
+        console.error('Error loading articles:', error);
+    }
+}
+
+// Delete article
+async function deleteArticle(id) {
+    if (confirm('Are you sure you want to delete this article?')) {
+        try {
+            await db.collection('articles').doc(id).delete();
+            alert('Article deleted successfully!');
+            loadArticles();
+        } catch (error) {
+            alert('Error deleting article: ' + error.message);
+        }
+    }
+}
+
+// Check login status
+auth.onAuthStateChanged(user => {
+    if (user) {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('adminSection').style.display = 'block';
+        loadArticles();
+    } else {
+        document.getElementById('loginSection').style.display = 'block';
+        document.getElementById('adminSection').style.display = 'none';
+    }
+});
