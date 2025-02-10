@@ -134,7 +134,7 @@ label {
     padding: 20px;
 }
 
-/* Nye stiler for artikkelinnhold */
+/* Styles for article content */
 .article-content img {
     max-width: 100%;
     height: auto;
@@ -206,4 +206,24 @@ label {
     color: #666;
     cursor: pointer;
     padding: 0 4px;
+}
+
+.product-link-display {
+    background: #f8f9fa;
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Login styles */
+#loginSection {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
