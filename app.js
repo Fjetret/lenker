@@ -145,6 +145,30 @@ function previewArticle() {
             <head>
                 <title>${title}</title>
                 <link rel="stylesheet" href="style.css">
+                <style>
+                    body {
+                        max-width: 800px;
+                        margin: 0 auto;
+                        padding: 20px;
+                        font-family: Arial, sans-serif;
+                    }
+                    img {
+                        max-width: 100%;
+                        height: auto;
+                    }
+                    .article-content img.float-left {
+                        float: left;
+                        margin: 0 10px 10px 0;
+                    }
+                    .article-content img.float-right {
+                        float: right;
+                        margin: 0 0 10px 10px;
+                    }
+                    .article-content img.center {
+                        display: block;
+                        margin: 0 auto;
+                    }
+                </style>
             </head>
             <body>
                 <div class="article-preview">
