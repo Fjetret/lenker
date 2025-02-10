@@ -1,4 +1,4 @@
-// Innlogging
+// Login
 function login() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
@@ -9,10 +9,10 @@ function login() {
             document.getElementById('adminSection').style.display = 'block';
             loadArticles();
         })
-        .catch(error => alert('Feil ved innlogging: ' + error.message));
+        .catch(error => alert('Login error: ' + error.message));
 }
 
-// Lagre artikkel
+// Save article
 function saveArticle() {
     const title = document.getElementById('title').value;
     const content = document.getElementById('content').value;
@@ -27,18 +27,18 @@ function saveArticle() {
         createdAt: new Date()
     })
     .then(() => {
-        alert('Artikkel lagret!');
+        alert('Article saved successfully!');
         loadArticles();
-        // Tøm skjema
+        // Clear form
         document.getElementById('title').value = '';
         document.getElementById('content').value = '';
         document.getElementById('productLink').value = '';
         document.getElementById('imageUrl').value = '';
     })
-    .catch(error => alert('Feil ved lagring: ' + error.message));
+    .catch(error => alert('Error saving article: ' + error.message));
 }
 
-// Last artikler
+// Load articles
 function loadArticles() {
     const articlesList = document.getElementById('articlesList');
     articlesList.innerHTML = '';
@@ -51,28 +51,28 @@ function loadArticles() {
                     <div class="article">
                         <h3>${article.title}</h3>
                         <p>${article.content}</p>
-                        <a href="${article.productLink}">Produktlenke</a>
+                        <a href="${article.productLink}">Product Link</a>
                         <img src="${article.imageUrl}" alt="${article.title}">
-                        <button onclick="deleteArticle('${doc.id}')">Slett</button>
+                        <button onclick="deleteArticle('${doc.id}')">Delete</button>
                     </div>
                 `;
             });
         });
 }
 
-// Slett artikkel
+// Delete article
 function deleteArticle(id) {
-    if (confirm('Er du sikker på at du vil slette denne artikkelen?')) {
+    if (confirm('Are you sure you want to delete this article?')) {
         db.collection('articles').doc(id).delete()
             .then(() => {
-                alert('Artikkel slettet!');
+                alert('Article deleted successfully!');
                 loadArticles();
             })
-            .catch(error => alert('Feil ved sletting: ' + error.message));
+            .catch(error => alert('Error deleting article: ' + error.message));
     }
 }
 
-// Sjekk innloggingsstatus
+// Check login status
 auth.onAuthStateChanged(user => {
     if (user) {
         document.getElementById('loginSection').style.display = 'none';
