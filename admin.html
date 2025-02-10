@@ -79,7 +79,7 @@
                 <button onclick="previewArticle()" class="btn-secondary">
                     <i class="fas fa-eye"></i> Preview
                 </button>
-                <button onclick="saveArticle()" class="btn-primary">
+                <button onclick="saveArticle()" class="btn-primary" id="saveButton">
                     <i class="fas fa-save"></i> Save Article
                 </button>
             </div>
@@ -93,7 +93,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAtrLJJq9Ifhu2XHtC5QUryaw1cpvQ71z0",
@@ -119,6 +119,8 @@
         window.doc = doc;
         window.query = query;
         window.orderBy = orderBy;
+        window.getDoc = getDoc;
+        window.setDoc = setDoc;
     </script>
 
     <script>
