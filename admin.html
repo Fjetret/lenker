@@ -126,8 +126,34 @@
         tinymce.init({
             selector: '.tinymce',
             plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect typography inlinecss',
-            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-            height: 500
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | alignleft aligncenter alignright alignjustify | lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            height: 500,
+            images_upload_handler: function (blobInfo, success, failure) {
+                success('');
+            },
+            image_advtab: true,
+            image_title: true,
+            image_class_list: [
+                {title: 'None', value: ''},
+                {title: 'Float Left', value: 'float-left'},
+                {title: 'Float Right', value: 'float-right'},
+                {title: 'Center', value: 'center'}
+            ],
+            style_formats: [
+                {
+                    title: 'Image styles',
+                    items: [
+                        {title: 'Float Left', selector: 'img', styles: {'float': 'left', 'margin': '0 10px 10px 0'}},
+                        {title: 'Float Right', selector: 'img', styles: {'float': 'right', 'margin': '0 0 10px 10px'}},
+                        {title: 'Center', selector: 'img', styles: {'display': 'block', 'margin': '0 auto'}}
+                    ]
+                }
+            ],
+            content_style: `
+                img.float-left { float: left; margin: 0 10px 10px 0; }
+                img.float-right { float: right; margin: 0 0 10px 10px; }
+                img.center { display: block; margin: 0 auto; }
+            `
         });
     </script>
     <script src="app.js"></script>
