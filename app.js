@@ -23,6 +23,7 @@ function showNewArticleForm() {
     // Reset form
     document.getElementById('title').value = '';
     document.getElementById('description').value = '';
+    document.getElementById('featuredImage').value = '';
     tinymce.get('content').setContent('');
     document.getElementById('featuredImagePreview').innerHTML = '';
     document.getElementById('seoTitle').value = '';
@@ -34,22 +35,13 @@ function showNewArticleForm() {
     updateProductLinksDisplay();
 }
 
-// Handle featured image upload
-async function handleFeaturedImageUpload(event) {
-    const file = event.target.files[0];
-    if (file) {
-        try {
-            const storageRef = ref(storage, 'featured/' + file.name);
-            const snapshot = await uploadBytes(storageRef, file);
-            const downloadURL = await getDownloadURL(snapshot.ref);
-            
-            document.getElementById('featuredImagePreview').innerHTML = `
-                <img src="${downloadURL}" alt="Featured image preview">
-                <input type="hidden" id="featuredImageUrl" value="${downloadURL}">
-            `;
-        } catch (error) {
-            alert('Error uploading image: ' + error.message);
-        }
+// Handle image URL preview
+function handleImageUrl() {
+    const imageUrl = document.getElementById('featuredImage').value;
+    if (imageUrl) {
+        document.getElementById('featuredImagePreview').innerHTML = `
+            <img src="${imageUrl}" alt="Featured image preview">
+        `;
     }
 }
 
@@ -145,6 +137,7 @@ function previewArticle() {
     const title = document.getElementById('title').value;
     const content = tinymce.get('content').getContent();
     const description = document.getElementById('description').value;
+    const featuredImage = document.getElementById('featuredImage').value;
 
     const previewWindow = window.open('', '_blank');
     previewWindow.document.write(`
@@ -155,6 +148,7 @@ function previewArticle() {
             </head>
             <body>
                 <div class="article-preview">
+                    ${featuredImage ? `<img src="${featuredImage}" alt="${title}" class="featured-image">` : ''}
                     <h1>${title}</h1>
                     <div class="article-description">${description}</div>
                     <div class="article-content">${content}</div>
@@ -181,7 +175,7 @@ async function saveArticle() {
     const title = document.getElementById('title').value;
     const content = tinymce.get('content').getContent();
     const description = document.getElementById('description').value;
-    const featuredImageUrl = document.getElementById('featuredImageUrl')?.value;
+    const featuredImage = document.getElementById('featuredImage').value;
     const seoTitle = document.getElementById('seoTitle').value;
     const seoDescription = document.getElementById('seoDescription').value;
     const seoKeywords = document.getElementById('seoKeywords').value;
@@ -196,7 +190,7 @@ async function saveArticle() {
             title,
             content,
             description,
-            featuredImage: featuredImageUrl,
+            featuredImage,
             productLinks,
             tags: Array.from(currentTags),
             seo: {
@@ -287,6 +281,6 @@ onAuthStateChanged(auth, (user) => {
 
 // Add event listeners
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('featuredImage').addEventListener('change', handleFeaturedImageUpload);
+    document.getElementById('featuredImage').addEventListener('input', handleImageUrl);
     document.getElementById('tagInput').addEventListener('keydown', handleTagInput);
 });
