@@ -1,6 +1,8 @@
 // Global variables for managing state
 let currentTags = new Set();
 let productLinks = [];
+let isEditing = false;
+let currentEditId = null;
 
 // Login
 async function login() {
@@ -19,6 +21,8 @@ async function login() {
 
 // Show new article form
 function showNewArticleForm() {
+    isEditing = false;
+    currentEditId = null;
     document.getElementById('articleForm').style.display = 'block';
     // Reset form
     document.getElementById('title').value = '';
@@ -33,6 +37,11 @@ function showNewArticleForm() {
     productLinks = [];
     updateTagsDisplay();
     updateProductLinksDisplay();
+    
+    // Update save button
+    const saveButton = document.getElementById('saveButton');
+    saveButton.innerHTML = '<i class="fas fa-save"></i> Save Article';
+    saveButton.onclick = saveArticle;
 }
 
 // Handle image URL preview
@@ -144,7 +153,6 @@ function previewArticle() {
         <html>
             <head>
                 <title>${title}</title>
-                <link rel="stylesheet" href="style.css">
                 <style>
                     body {
                         max-width: 800px;
@@ -210,7 +218,97 @@ async function saveArticle() {
     }
 
     try {
-        await addDoc(collection(db, 'articles'), {
+        if (isEditing && currentEditId) {
+            await updateArticle(currentEditId);
+        } else {
+            await addDoc(collection(db, 'articles'), {
+                title,
+                content,
+                description,
+                featuredImage,
+                productLinks,
+                tags: Array.from(currentTags),
+                seo: {
+                    title: seoTitle,
+                    description: seoDescription,
+                    keywords: seoKeywords
+                },
+                createdAt: new Date()
+            });
+        }
+
+        alert(isEditing ? 'Article updated successfully!' : 'Article saved successfully!');
+        loadArticles();
+        document.getElementById('articleForm').style.display = 'none';
+    } catch (error) {
+        alert('Error saving article: ' + error.message);
+    }
+}
+
+// Edit article
+async function editArticle(id) {
+    try {
+        isEditing = true;
+        currentEditId = id;
+        
+        // Fetch the article
+        const docRef = doc(db, 'articles', id);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            const article = docSnap.data();
+            
+            // Show and fill the form
+            document.getElementById('articleForm').style.display = 'block';
+            document.getElementById('title').value = article.title;
+            document.getElementById('description').value = article.description || '';
+            document.getElementById('featuredImage').value = article.featuredImage || '';
+            tinymce.get('content').setContent(article.content);
+            document.getElementById('seoTitle').value = article.seo?.title || '';
+            document.getElementById('seoDescription').value = article.seo?.description || '';
+            document.getElementById('seoKeywords').value = article.seo?.keywords || '';
+            
+            // Show featured image preview
+            if (article.featuredImage) {
+                document.getElementById('featuredImagePreview').innerHTML = `
+                    <img src="${article.featuredImage}" alt="Featured image preview">
+                `;
+            }
+            
+            // Load tags
+            currentTags = new Set(article.tags || []);
+            updateTagsDisplay();
+            
+            // Load product links
+            productLinks = article.productLinks || [];
+            updateProductLinksDisplay();
+            
+            // Update save button
+            const saveButton = document.getElementById('saveButton');
+            saveButton.innerHTML = '<i class="fas fa-save"></i> Update Article';
+        }
+    } catch (error) {
+        alert('Error loading article for editing: ' + error.message);
+    }
+}
+
+// Update article
+async function updateArticle(id) {
+    const title = document.getElementById('title').value;
+    const content = tinymce.get('content').getContent();
+    const description = document.getElementById('description').value;
+    const featuredImage = document.getElementById('featuredImage').value;
+    const seoTitle = document.getElementById('seoTitle').value;
+    const seoDescription = document.getElementById('seoDescription').value;
+    const seoKeywords = document.getElementById('seoKeywords').value;
+
+    if (!title || !content) {
+        alert('Please fill in at least the title and content');
+        return;
+    }
+
+    try {
+        await setDoc(doc(db, 'articles', id), {
             title,
             content,
             description,
@@ -222,14 +320,17 @@ async function saveArticle() {
                 description: seoDescription,
                 keywords: seoKeywords
             },
-            createdAt: new Date()
-        });
+            updatedAt: new Date()
+        }, { merge: true });
 
-        alert('Article saved successfully!');
+        isEditing = false;
+        currentEditId = null;
+        
+        alert('Article updated successfully!');
         loadArticles();
         document.getElementById('articleForm').style.display = 'none';
     } catch (error) {
-        alert('Error saving article: ' + error.message);
+        alert('Error updating article: ' + error.message);
     }
 }
 
@@ -283,12 +384,6 @@ async function deleteArticle(id) {
             alert('Error deleting article: ' + error.message);
         }
     }
-}
-
-// Edit article (to be implemented)
-async function editArticle(id) {
-    // Implementation for editing existing articles
-    alert('Edit functionality coming soon!');
 }
 
 // Check login status
