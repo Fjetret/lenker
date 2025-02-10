@@ -1,4 +1,3 @@
-/* style.css */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
@@ -36,14 +35,6 @@ label {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 16px;
-}
-
-.image-upload-container {
-    border: 2px dashed #ddd;
-    padding: 20px;
-    text-align: center;
-    border-radius: 4px;
-    margin-top: 10px;
 }
 
 .image-preview {
@@ -103,6 +94,15 @@ label {
     cursor: pointer;
 }
 
+.btn-danger {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
 .form-actions {
     display: flex;
     gap: 10px;
@@ -132,4 +132,78 @@ label {
 
 .article-card-content {
     padding: 20px;
+}
+
+/* Nye stiler for artikkelinnhold */
+.article-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+.article-content img.float-left {
+    float: left;
+    margin: 0 10px 10px 0;
+}
+
+.article-content img.float-right {
+    float: right;
+    margin: 0 0 10px 10px;
+}
+
+.article-content img.center {
+    display: block;
+    margin: 0 auto;
+}
+
+.article-content::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Preview styles */
+.article-preview {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+}
+
+.article-preview img.featured-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.product-links-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.btn-add {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-remove {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-remove-tag {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 0 4px;
 }
