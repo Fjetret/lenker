@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin - Artikkelside</title>
+    <title>Admin - Article Site</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="loginSection">
-        <h2>Logg inn</h2>
-        <input type="email" id="email" placeholder="E-post">
-        <input type="password" id="password" placeholder="Passord">
-        <button onclick="login()">Logg inn</button>
+        <h2>Login</h2>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
     </div>
 
     <div id="adminSection" style="display: none;">
-        <h2>Ny Artikkel</h2>
-        <input type="text" id="title" placeholder="Tittel">
-        <textarea id="content" placeholder="Innhold"></textarea>
-        <input type="text" id="productLink" placeholder="Produktlenke">
-        <input type="text" id="imageUrl" placeholder="Bildelenke">
-        <button onclick="saveArticle()">Lagre artikkel</button>
+        <h2>New Article</h2>
+        <input type="text" id="title" placeholder="Title">
+        <textarea id="content" placeholder="Content"></textarea>
+        <input type="text" id="productLink" placeholder="Product Link">
+        <input type="text" id="imageUrl" placeholder="Image URL">
+        <button onclick="saveArticle()">Save Article</button>
 
-        <h2>Alle artikler</h2>
+        <h2>All Articles</h2>
         <div id="articlesList"></div>
     </div>
 
@@ -30,12 +30,10 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     
     <script>
-    // Din Firebase-konfigurasjon her
     const firebaseConfig = {
-        // Lim inn konfigurasjon fra Firebase Console
+        // Your Firebase configuration will go here
     };
 
-    // Initialiser Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
