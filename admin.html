@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Artikkelside</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="loginSection">
+        <h2>Logg inn</h2>
+        <input type="email" id="email" placeholder="E-post">
+        <input type="password" id="password" placeholder="Passord">
+        <button onclick="login()">Logg inn</button>
+    </div>
+
+    <div id="adminSection" style="display: none;">
+        <h2>Ny Artikkel</h2>
+        <input type="text" id="title" placeholder="Tittel">
+        <textarea id="content" placeholder="Innhold"></textarea>
+        <input type="text" id="productLink" placeholder="Produktlenke">
+        <input type="text" id="imageUrl" placeholder="Bildelenke">
+        <button onclick="saveArticle()">Lagre artikkel</button>
+
+        <h2>Alle artikler</h2>
+        <div id="articlesList"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <script>
+    // Din Firebase-konfigurasjon her
+    const firebaseConfig = {
+        // Lim inn konfigurasjon fra Firebase Console
+    };
+
+    // Initialiser Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
